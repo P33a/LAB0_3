@@ -12,8 +12,8 @@
   * Go to HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem in regedit and then set LongPathsEnabled to 1.
 
 * Install Git
-   * Open *Git Bash* as administrator
-   * Run **git config --global core.longpaths true**
+   * Open *Git CMD*
+   * Run the command **git config --global core.longpaths true**
    * Reboot
 
 * Install VSCode
