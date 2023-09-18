@@ -49,9 +49,9 @@ void setup()
   // Start the serial port with 115200 baudrate
   Serial.begin(115200);
 
-  blink_period = 2000;
+  blink_period = 1000 * 1.0/0.33; // In ms
 
-  interval = 10;
+  interval = 40;
   set_state(fsm1, 0);
   set_state(fsm2, 0);    
 }
