@@ -17,6 +17,9 @@
    * Reboot
 
 * Install VSCode
+  
+* If you are using Linux, before instaling the PlatformIO extension you must indyal the package python3-venv:
+sudo apt install python3-venv
 
 * Open VSCode and click the extensions Icon
 
