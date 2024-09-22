@@ -6,6 +6,8 @@
 #define S1_pin 2
 #define S2_pin 3
 
+
+// Struct to hold the state for a finite state machine
 typedef struct {
   int state, new_state;
 
@@ -24,9 +26,17 @@ uint8_t LED_1, LED_2;
 // Our finite state machines
 fsm_t fsm1, fsm2;
 
-unsigned long interval, last_cycle;
-unsigned long loop_micros;
-uint16_t blink_period;
+
+// meaningful names for the fsm1 states
+enum {
+  sm1_off = 0,
+  sm1_blink_on,
+  sm1_blink_off
+};
+
+uint32_t interval, last_cycle;
+uint32_t loop_micros;
+uint32_t blink_period;
 
 // Set new state
 void set_state(fsm_t& fsm, int new_state)
@@ -65,11 +75,11 @@ void loop()
       if (b == '+') blink_period = 80 * blink_period / 100;  // Press '+' to increase the frequency
     }  
     // To measure the time between loop() calls
-    //unsigned long last_loop_micros = loop_micros; 
+    //uint32_t last_loop_micros = loop_micros; 
     
     // Do this only every "interval" miliseconds 
     // It helps to clear the switches bounce effect
-    unsigned long now = millis();
+    uint32_t now = millis();
     if (now - last_cycle > interval) {
       loop_micros = micros();
       last_cycle = now;
@@ -83,21 +93,25 @@ void loop()
       // FSM processing
 
       // Update tis for all state machines
-      unsigned long cur_time = millis();   // Just one call to millis()
+      uint32_t cur_time = millis();   // Just one call to millis()
       fsm1.tis = cur_time - fsm1.tes;
       fsm2.tis = cur_time - fsm2.tes; 
 
       // Calculate next state for the first state machine
-      if (fsm1.state == 0 && S1){
-        fsm1.new_state = 1;
-      } else if(fsm1.state == 1 && !S1) {
-        fsm1.new_state = 0;
-      } else if (fsm1.state == 1 && fsm1.tis > blink_period / 2){
-        fsm1.new_state = 2;
-      } else if (fsm1.state == 2 && fsm1.tis > blink_period / 2){
-        fsm1.new_state = 1;
-      } else if (fsm1.state == 2 && !S1){
-        fsm1.new_state = 0;
+      if (fsm1.state == sm1_off && S1){
+        fsm1.new_state = sm1_blink_on;
+
+      } else if(fsm1.state == sm1_blink_on && !S1) {
+        fsm1.new_state = sm1_off;
+
+      } else if (fsm1.state == sm1_blink_on && fsm1.tis > blink_period / 2){
+        fsm1.new_state = sm1_blink_off;
+
+      } else if (fsm1.state == sm1_blink_off && fsm1.tis > blink_period / 2){
+        fsm1.new_state = sm1_blink_on;
+
+      } else if (fsm1.state == sm1_blink_off && !S1){
+        fsm1.new_state = sm1_off;
       }
 
       // Calculate next state for the second state machine
@@ -107,20 +121,22 @@ void loop()
         fsm2.new_state = 0;
       }*/
 
-      // Update the states
+      // Update the states -> by doing this both stahtes progress is "simultaneous"
       set_state(fsm1, fsm1.new_state);
       set_state(fsm2, fsm2.new_state);
 
-      // Actions set by the current state of the first state machine
-      if (fsm1.state == 0){
+      // Actions to be performed according to the current state of the first state machine
+      if (fsm1.state == sm1_off){
         LED_1 = 0;
-      } else if (fsm1.state == 1){
+
+      } else if (fsm1.state == sm1_blink_on){
         LED_1 = 1;
-      } else if (fsm1.state == 2){
+
+      } else if (fsm1.state == sm1_blink_off){
         LED_1 = 0;
       }
 
-      // A more compact way
+      // A more compact way, but taking more assumptions
       // LED_1 = (fsm1.state == 1);
       // LED_1 = (state == 1)||(state ==2);  if LED1 must be set in states 1 and 2
       
