@@ -32,3 +32,12 @@
 
 * In VSCode choose **File->Open Folder...** and select the folder where the project is.
 * If it is the first time, the next step can take a long time because PlatformIO wil have to download the compiler, the tools and the libraries. It will happen just for the first time if the process completes without errors. When everything is installed the icon with a checkmark in the bottom must be clicked to build the firmware.
+
+## Flash for the first time
+
+* Drag the file named “firmware.uf2”, that is located in the folder “PlatformIO/Projects/<your_prject_name>/.pio/build/pico”, and drop it on the USB Mass Storage device corresponding to the Raspberry Pi Pico.
+
+##  Install Drivers (Windows)
+
+* Run Zadig and select RP2 Boot (Interface 1) from the dropdown box and select WinUSB as the driver
+* Click the "Install Driver" button. Wait for the installation to complete - this may take a few minutes.
