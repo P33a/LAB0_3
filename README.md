@@ -18,7 +18,7 @@
 
 * Install VSCode
   
-* If you are using Linux, before instaling the PlatformIO extension you must install the package python3-venv:
+* If you are using Linux, before instaling the PlatformIO extension you must install the package python3-venv. If you are using a Debian based distribution:
 
     sudo apt install python3-venv
 
@@ -41,3 +41,4 @@
 
 * Run Zadig and select RP2 Boot (Interface 1) from the dropdown box and select WinUSB as the driver
 * Click the "Install Driver" button. Wait for the installation to complete - this may take a few minutes.
+
